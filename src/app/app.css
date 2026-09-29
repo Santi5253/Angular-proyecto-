@@ -1,0 +1,81 @@
+/* Sistema Caja Registradora - Cigarrería | Hoja de estilos principal */
+:host {
+  display: block;
+  min-height: 100vh;
+  background: #f8fafc;
+  font-family: Roboto, "Helvetica Neue", sans-serif;
+}
+
+.topbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px 24px;
+  background: #111827;
+  color: #fff;
+  box-shadow: 0 2px 8px rgba(0,0,0,.25);
+}
+
+.brand {
+  margin: 0;
+  font-size: 1.25rem;
+  letter-spacing: .5px;
+  font-weight: 700;
+}
+
+.brand span {
+  color: #f59e0b;
+}
+
+.nav-links {
+  display: flex;
+  gap: 12px;
+}
+
+.nav-links a {
+  color: #e5e7eb;
+  text-decoration: none;
+  padding: 8px 16px;
+  border-radius: 20px;
+  border: 1px solid transparent;
+  transition: all .2s ease;
+  font-weight: 500;
+}
+
+.nav-links a:hover {
+  background: rgba(255,255,255,.12);
+}
+
+.nav-links a.active {
+  background: #f59e0b;
+  color: #111827;
+  font-weight: 700;
+}
+
+.page-header {
+  padding: 24px 24px 0 24px;
+}
+
+.page-header h1 {
+  margin: 0;
+  color: #111827;
+  font-size: 1.6rem;
+}
+
+.page-header p {
+  margin: 6px 0 0 0;
+  color: #64748b;
+}
+
+.content {
+  padding: 16px 24px 40px 24px;
+  max-width: 1100px;
+  margin: 0 auto;
+}
+
+.footer {
+  text-align: center;
+  padding: 16px;
+  color: #94a3b8;
+  font-size: .85rem;
+}
