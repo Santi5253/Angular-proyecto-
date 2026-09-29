@@ -1,0 +1,120 @@
+<mat-card class="crud-card">
+  <mat-card-header>
+    <mat-card-title>CRUD Productos — Cigarrería</mat-card-title>
+    <mat-card-subtitle>Cree, edite, busque y elimine productos del inventario. Los datos se guardan en el navegador.</mat-card-subtitle>
+  </mat-card-header>
+
+  <mat-card-content>
+    <form [formGroup]="form" (ngSubmit)="guardar()" class="crud-form">
+      <div class="row">
+        <mat-form-field class="col" appearance="outline">
+          <mat-label>Código (ej: BEB-003)</mat-label>
+          <input matInput formControlName="codigo" [readonly]="!!editando" placeholder="CIG-003" />
+          @if (form.controls.codigo.hasError('required') && form.controls.codigo.touched) {
+            <mat-error>El código es obligatorio</mat-error>
+          }
+        </mat-form-field>
+
+        <mat-form-field class="col" appearance="outline">
+          <mat-label>Nombre</mat-label>
+          <input matInput formControlName="nombre" placeholder="Ej: Maní Moto 50g" />
+          @if (form.controls.nombre.hasError('required') && form.controls.nombre.touched) {
+            <mat-error>El nombre es obligatorio</mat-error>
+          }
+        </mat-form-field>
+      </div>
+
+      <div class="row">
+        <mat-form-field class="col" appearance="outline">
+          <mat-label>Categoría</mat-label>
+          <mat-select formControlName="categoria">
+            @for (c of categorias; track c) {
+              <mat-option [value]="c">{{ c }}</mat-option>
+            }
+          </mat-select>
+        </mat-form-field>
+
+        <mat-form-field class="col" appearance="outline">
+          <mat-label>Precio ($)</mat-label>
+          <input matInput type="number" formControlName="precio" min="0" />
+          @if (form.controls.precio.hasError('min') && form.controls.precio.touched) {
+            <mat-error>Precio mínimo $100</mat-error>
+          }
+        </mat-form-field>
+
+        <mat-form-field class="col" appearance="outline">
+          <mat-label>Stock</mat-label>
+          <input matInput type="number" formControlName="stock" min="0" />
+        </mat-form-field>
+      </div>
+
+      @if (error) {
+        <p class="error">{{ error }}</p>
+      }
+
+      <div class="actions">
+        <button mat-raised-button color="primary" type="submit">
+          {{ editando ? 'Actualizar producto' : 'Agregar producto' }}
+        </button>
+        @if (editando) {
+          <button mat-button type="button" (click)="cancelar()">Cancelar edición</button>
+        }
+      </div>
+    </form>
+
+    <div class="toolbar">
+      <mat-form-field appearance="outline" class="search">
+        <mat-label>Buscar por código, nombre o categoría</mat-label>
+        <input matInput [value]="filtro" (input)="filtro = $any($event.target).value; refrescar()" placeholder="Ej: cigarrillos" />
+      </mat-form-field>
+      <p class="inventario">Valor inventario: <strong>${{ valorInventario }}</strong> | Productos: <strong>{{ productos.length }}</strong></p>
+    </div>
+
+    <table mat-table [dataSource]="productos" class="full-width-table">
+      <ng-container matColumnDef="codigo">
+        <th mat-header-cell *matHeaderCellDef>Código</th>
+        <td mat-cell *matCellDef="let p">{{ p.codigo }}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="nombre">
+        <th mat-header-cell *matHeaderCellDef>Nombre</th>
+        <td mat-cell *matCellDef="let p">{{ p.nombre }}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="categoria">
+        <th mat-header-cell *matHeaderCellDef>Categoría</th>
+        <td mat-cell *matCellDef="let p"><span class="badge">{{ p.categoria }}</span></td>
+      </ng-container>
+
+      <ng-container matColumnDef="precio">
+        <th mat-header-cell *matHeaderCellDef>Precio</th>
+        <td mat-cell *matCellDef="let p">${{ p.precio }}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="stock">
+        <th mat-header-cell *matHeaderCellDef>Stock</th>
+        <td mat-cell *matCellDef="let p">{{ p.stock }}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="total">
+        <th mat-header-cell *matHeaderCellDef>Total</th>
+        <td mat-cell *matCellDef="let p">${{ p.precio * p.stock }}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="acciones">
+        <th mat-header-cell *matHeaderCellDef>Acciones</th>
+        <td mat-cell *matCellDef="let p">
+          <button mat-button color="primary" (click)="editar(p)">Editar</button>
+          <button mat-button color="warn" (click)="eliminar(p.codigo)">Eliminar</button>
+        </td>
+      </ng-container>
+
+      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+    </table>
+
+    @if (!productos.length) {
+      <p class="empty">Sin resultados. Agregue su primer producto arriba.</p>
+    }
+  </mat-card-content>
+</mat-card>
