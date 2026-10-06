@@ -43,6 +43,15 @@ export class Productos {
     this.guardar(this.listar().filter((x) => x.codigo.toLowerCase() !== codigo.toLowerCase()));
   }
 
+  descontar(items: { codigo: string; cantidad: number }[]): void {
+    const actual = this.listar().map((x) => {
+      const item = items.find((i) => i.codigo.toLowerCase() === x.codigo.toLowerCase());
+      if (!item) return x;
+      return { ...x, stock: Math.max(0, x.stock - item.cantidad) };
+    });
+    this.guardar(actual);
+  }
+
   buscar(texto: string): Producto[] {
     const t = texto.trim().toLowerCase();
     if (!t) return this.listar();
