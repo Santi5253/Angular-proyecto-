@@ -65,8 +65,8 @@ export class FacturaCaja implements OnInit {
 
   datosForm = this.fb.group({
     cliente: ['', Validators.required],
-    documento: ['', [Validators.required, Validators.minLength(5)]],
-    descuento: [0, [Validators.min(0), Validators.max(50)]],
+    documento: ['', [ Validators.minLength(1), Validators.maxLength(10)]],
+    descuento: [0, [Validators.min(0), Validators.max(100)]],
   });
 
   lineaForm = this.fb.group({
