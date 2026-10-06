@@ -2,64 +2,73 @@ import { DataSource } from '@angular/cdk/collections';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { map } from 'rxjs/operators';
-import { Observable, of as observableOf, merge } from 'rxjs';
+import { Observable, of as observableOf, merge, BehaviorSubject } from 'rxjs';
 
-// TODO: Replace this with your own data model type
+export type CategoriaInventario =
+  | 'Cigarrillos'
+  | 'Bebidas'
+  | 'Dulces'
+  | 'Abarrotes'
+  | 'Licores'
+  | 'Otros';
+
 export interface TablaProductosItem {
-  name: string;
-  id: number;
+  codigo: string;
+  nombre: string;
+  categoria: CategoriaInventario;
+  precio: number;
+  stock: number;
 }
 
-// TODO: replace this with real data from your application
+// Inventario real de la cigarrería (luego vendrá del back-end GET /getproductos)
 const EXAMPLE_DATA: TablaProductosItem[] = [
-  { id: 1, name: 'Hydrogen' },
-  { id: 2, name: 'Helium' },
-  { id: 3, name: 'Lithium' },
-  { id: 4, name: 'Beryllium' },
-  { id: 5, name: 'Boron' },
-  { id: 6, name: 'Carbon' },
-  { id: 7, name: 'Nitrogen' },
-  { id: 8, name: 'Oxygen' },
-  { id: 9, name: 'Fluorine' },
-  { id: 10, name: 'Neon' },
-  { id: 11, name: 'Sodium' },
-  { id: 12, name: 'Magnesium' },
-  { id: 13, name: 'Aluminum' },
-  { id: 14, name: 'Silicon' },
-  { id: 15, name: 'Phosphorus' },
-  { id: 16, name: 'Sulfur' },
-  { id: 17, name: 'Chlorine' },
-  { id: 18, name: 'Argon' },
-  { id: 19, name: 'Potassium' },
-  { id: 20, name: 'Calcium' },
+  { codigo: 'CIG-001', nombre: 'Pielroja x20', categoria: 'Cigarrillos', precio: 9500, stock: 30 },
+  { codigo: 'CIG-002', nombre: 'Marlboro Rojo x20', categoria: 'Cigarrillos', precio: 14500, stock: 20 },
+  { codigo: 'CIG-003', nombre: 'Lucky Strike x20', categoria: 'Cigarrillos', precio: 13200, stock: 4 },
+  { codigo: 'BEB-001', nombre: 'Pony Malta 330ml', categoria: 'Bebidas', precio: 3500, stock: 48 },
+  { codigo: 'BEB-002', nombre: 'Coca-Cola 400ml', categoria: 'Bebidas', precio: 4000, stock: 36 },
+  { codigo: 'BEB-003', nombre: 'Agua Cristal 600ml', categoria: 'Bebidas', precio: 3000, stock: 3 },
+  { codigo: 'DUL-001', nombre: 'Chocorramo', categoria: 'Dulces', precio: 3500, stock: 25 },
+  { codigo: 'DUL-002', nombre: 'Bom Bom Bun Rojo', categoria: 'Dulces', precio: 800, stock: 100 },
+  { codigo: 'ABA-001', nombre: 'Papas Margarita 105g', categoria: 'Abarrotes', precio: 6500, stock: 18 },
+  { codigo: 'LIC-001', nombre: 'Aguardiente Antioqueño 750ml', categoria: 'Licores', precio: 68000, stock: 8 },
+  { codigo: 'LIC-002', nombre: 'Cerveza Poker lata 330ml', categoria: 'Licores', precio: 3500, stock: 60 },
+  { codigo: 'OTR-001', nombre: 'Encendedor Bic', categoria: 'Otros', precio: 4000, stock: 15 },
 ];
 
 /**
- * Data source for the TablaProductos view. This class should
- * encapsulate all logic for fetching and manipulating the displayed data
- * (including sorting, pagination, and filtering).
+ * Data source del inventario: soporta paginación, ordenamiento y filtro
+ * interactivo por texto (código, nombre o categoría).
  */
 export class TablaProductosDataSource extends DataSource<TablaProductosItem> {
   data: TablaProductosItem[] = EXAMPLE_DATA;
   paginator: MatPaginator | undefined;
   sort: MatSort | undefined;
+  private filtro$ = new BehaviorSubject<string>('');
 
   constructor() {
     super();
   }
 
-  /**
-   * Connect this data source to the table. The table will only update when
-   * the returned stream emits new items.
-   * @returns A stream of the items to be rendered.
-   */
+  setFiltro(texto: string): void {
+    this.filtro$.next(texto.trim().toLowerCase());
+    this.paginator?.firstPage();
+  }
+
+  get valorInventario(): number {
+    return this.data.reduce((acc, x) => acc + x.precio * x.stock, 0);
+  }
+
   connect(): Observable<TablaProductosItem[]> {
     if (this.paginator && this.sort) {
-      // Combine everything that affects the rendered data into one update
-      // stream for the data-table to consume.
-      return merge(observableOf(this.data), this.paginator.page, this.sort.sortChange).pipe(
+      return merge(
+        observableOf(this.data),
+        this.paginator.page,
+        this.sort.sortChange,
+        this.filtro$,
+      ).pipe(
         map(() => {
-          return this.getPagedData(this.getSortedData([...this.data]));
+          return this.getPagedData(this.getSortedData(this.getFiltrada([...this.data])));
         }),
       );
     } else {
@@ -67,16 +76,19 @@ export class TablaProductosDataSource extends DataSource<TablaProductosItem> {
     }
   }
 
-  /**
-   *  Called when the table is being destroyed. Use this function, to clean up
-   * any open connections or free any held resources that were set up during connect.
-   */
   disconnect(): void {}
 
-  /**
-   * Paginate the data (client-side). If you're using server-side pagination,
-   * this would be replaced by requesting the appropriate data from the server.
-   */
+  private getFiltrada(data: TablaProductosItem[]): TablaProductosItem[] {
+    const f = this.filtro$.value;
+    if (!f) return data;
+    return data.filter(
+      (x) =>
+        x.codigo.toLowerCase().includes(f) ||
+        x.nombre.toLowerCase().includes(f) ||
+        x.categoria.toLowerCase().includes(f),
+    );
+  }
+
   private getPagedData(data: TablaProductosItem[]): TablaProductosItem[] {
     if (this.paginator) {
       const startIndex = this.paginator.pageIndex * this.paginator.pageSize;
@@ -86,10 +98,6 @@ export class TablaProductosDataSource extends DataSource<TablaProductosItem> {
     }
   }
 
-  /**
-   * Sort the data (client-side). If you're using server-side sorting,
-   * this would be replaced by requesting the appropriate data from the server.
-   */
   private getSortedData(data: TablaProductosItem[]): TablaProductosItem[] {
     if (!this.sort || !this.sort.active || this.sort.direction === '') {
       return data;
@@ -98,10 +106,16 @@ export class TablaProductosDataSource extends DataSource<TablaProductosItem> {
     return data.sort((a, b) => {
       const isAsc = this.sort?.direction === 'asc';
       switch (this.sort?.active) {
-        case 'name':
-          return compare(a.name, b.name, isAsc);
-        case 'id':
-          return compare(+a.id, +b.id, isAsc);
+        case 'codigo':
+          return compare(a.codigo, b.codigo, isAsc);
+        case 'nombre':
+          return compare(a.nombre, b.nombre, isAsc);
+        case 'categoria':
+          return compare(a.categoria, b.categoria, isAsc);
+        case 'precio':
+          return compare(a.precio, b.precio, isAsc);
+        case 'stock':
+          return compare(a.stock, b.stock, isAsc);
         default:
           return 0;
       }

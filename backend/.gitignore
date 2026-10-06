@@ -1,0 +1,6 @@
+# No subir: dependencias, compilado y secretos
+node_modules/
+dist/
+.env
+npm-debug.log
+coverage/

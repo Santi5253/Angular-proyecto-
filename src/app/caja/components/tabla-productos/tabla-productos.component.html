@@ -1,15 +1,53 @@
-<div class="mat-elevation-z2">
-  <table mat-table class="full-width-table" matSort aria-label="Elements">
-    <!-- Id Column -->
-    <ng-container matColumnDef="id">
-      <th mat-header-cell *matHeaderCellDef mat-sort-header>Id</th>
-      <td mat-cell *matCellDef="let row">{{ row.id }}</td>
+<div class="inventario-header">
+  <div>
+    <h2>Inventario — Cigarrería</h2>
+    <p>Busque, ordene y pagine. Resalte stock crítico para reabastecer antes del cierre de caja.</p>
+  </div>
+  <mat-form-field appearance="outline" class="filtro">
+    <mat-label>Filtrar inventario</mat-label>
+    <input matInput (keyup)="aplicarFiltro($any($event.target).value)" placeholder="Ej: cigarrillos, BEB-, poker" />
+  </mat-form-field>
+</div>
+
+<div class="mat-elevation-z2 tabla-card">
+  <table mat-table class="full-width-table" matSort aria-label="Inventario">
+    <ng-container matColumnDef="codigo">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>Código</th>
+      <td mat-cell *matCellDef="let row">{{ row.codigo }}</td>
     </ng-container>
 
-    <!-- Name Column -->
-    <ng-container matColumnDef="name">
-      <th mat-header-cell *matHeaderCellDef mat-sort-header>Name</th>
-      <td mat-cell *matCellDef="let row">{{ row.name }}</td>
+    <ng-container matColumnDef="nombre">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>Producto</th>
+      <td mat-cell *matCellDef="let row">{{ row.nombre }}</td>
+    </ng-container>
+
+    <ng-container matColumnDef="categoria">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>Categoría</th>
+      <td mat-cell *matCellDef="let row"><span class="badge">{{ row.categoria }}</span></td>
+    </ng-container>
+
+    <ng-container matColumnDef="precio">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>Precio</th>
+      <td mat-cell *matCellDef="let row">${{ row.precio }}</td>
+    </ng-container>
+
+    <ng-container matColumnDef="stock">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>Stock</th>
+      <td mat-cell *matCellDef="let row" [class.critico]="row.stock <= 5">{{ row.stock }}</td>
+    </ng-container>
+
+    <ng-container matColumnDef="estado">
+      <th mat-header-cell *matHeaderCellDef>Estado</th>
+      <td mat-cell *matCellDef="let row">
+        <span class="estado" [class.ok]="estado(row.stock) === 'OK'" [class.bajo]="estado(row.stock) === 'BAJO'" [class.critico-bg]="estado(row.stock) === 'CRÍTICO'">
+          {{ estado(row.stock) }}
+        </span>
+      </td>
+    </ng-container>
+
+    <ng-container matColumnDef="total">
+      <th mat-header-cell *matHeaderCellDef>Valorizado</th>
+      <td mat-cell *matCellDef="let row">${{ row.precio * row.stock }}</td>
     </ng-container>
 
     <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
@@ -20,9 +58,11 @@
     #paginator
     [length]="dataSource.data.length"
     [pageIndex]="0"
-    [pageSize]="10"
+    [pageSize]="5"
     [pageSizeOptions]="[5, 10, 20]"
     aria-label="Select page"
   >
   </mat-paginator>
 </div>
+
+<p class="nota">Interactúe: clic en cabeceras para ordenar, escriba para filtrar, cambie página. Valor total inventario: <strong>${{ dataSource.valorInventario }}</strong></p>
