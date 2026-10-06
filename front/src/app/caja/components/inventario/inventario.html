@@ -1,11 +1,11 @@
-<mat-card class="crud-card">
+<mat-card class="inventario-card">
   <mat-card-header>
-    <mat-card-title>CRUD Productos — Cigarrería</mat-card-title>
+    <mat-card-title>Inventario — Cigarrería</mat-card-title>
     <mat-card-subtitle>Cree, edite, busque y elimine productos del inventario. Los datos se guardan en el navegador.</mat-card-subtitle>
   </mat-card-header>
 
   <mat-card-content>
-    <form [formGroup]="form" (ngSubmit)="guardar()" class="crud-form">
+    <form [formGroup]="form" (ngSubmit)="guardar()" class="inventario-form">
       <div class="row">
         <mat-form-field class="col" appearance="outline">
           <mat-label>Código (ej: BEB-003)</mat-label>

@@ -9,7 +9,7 @@ import { CategoriaTienda, Producto } from '../../models/producto';
 import { Productos } from '../../services/productos';
 
 @Component({
-  selector: 'app-producto-crud',
+  selector: 'app-inventario',
   imports: [
     ReactiveFormsModule,
     MatCardModule,
@@ -18,10 +18,10 @@ import { Productos } from '../../services/productos';
     MatSelectModule,
     MatTableModule,
   ],
-  templateUrl: './producto-crud.html',
-  styleUrl: './producto-crud.css',
+  templateUrl: './inventario.html',
+  styleUrl: './inventario.css',
 })
-export class ProductoCrud implements OnInit {
+export class Inventario implements OnInit {
   private fb = inject(FormBuilder);
   private servicio = inject(Productos);
 
