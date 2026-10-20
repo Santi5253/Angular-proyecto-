@@ -19,3 +19,4 @@ export async function verificarConexion(): Promise<void> {
     console.log('DB no disponible: el back sigue con datos en memoria (modo clase)');
   }
 }
+//Prueba de repo

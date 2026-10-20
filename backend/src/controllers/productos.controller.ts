@@ -1,40 +1,76 @@
+// backend/src/controllers/productos.controller.ts (refactor propuesto)
 import { Request, Response } from 'express';
-import { Producto, esProductoValido } from '../models/producto';
+import { ProductoModel } from '../models/producto.model';
 
-// Inventario en memoria (Fase 2: alistamiento). Cuando haya DB, aquí va pool.query.
-let productos: Producto[] = [
-  { codigo: 'CIG-001', nombre: 'Pielroja x20', categoria: 'Cigarrillos', precio: 9500, stock: 30 },
-  { codigo: 'BEB-001', nombre: 'Pony Malta 330ml', categoria: 'Bebidas', precio: 3500, stock: 48 },
-  { codigo: 'DUL-001', nombre: 'Chocorramo', categoria: 'Dulces', precio: 3500, stock: 25 },
-];
-
-// GET /getproductos — los clientes/productos se obtienen (get)
-export function getProductos(_req: Request, res: Response): void {
-  res.json(productos);
-}
-
-// POST /postproductos — tratar los datos (post)
-export function postProducto(req: Request, res: Response): void {
-  if (!esProductoValido(req.body)) {
-    res.status(400).json({ error: 'Producto inválido: revise codigo, nombre, precio y stock' });
-    return;
+export const getProductos = async (_req: Request, res: Response): Promise<void> => {
+  try {
+    const productos = await ProductoModel.obtenerTodos();
+    res.json(productos);
+  } catch (error) {
+    res.status(500).json({ error: 'Error al obtener productos' });
   }
-  const existe = productos.some((p) => p.codigo.toLowerCase() === req.body.codigo.toLowerCase());
-  if (existe) {
-    res.status(409).json({ error: 'Ya existe ese código' });
-    return;
-  }
-  productos.push(req.body);
-  res.status(201).json(req.body);
-}
+};
 
-// DELETE /deleteproductos/:codigo — se eliminan (delete)
-export function deleteProducto(req: Request, res: Response): void {
-  const antes = productos.length;
-  productos = productos.filter((p) => p.codigo.toLowerCase() !== String(req.params.codigo).toLowerCase());
-  if (productos.length === antes) {
-    res.status(404).json({ error: 'No existe ese código' });
-    return;
+export const getProductoPorCodigo = async (req: Request, res: Response): Promise<void> => {
+  try {
+    const codigo = String(req.params.codigo);
+    const producto = await ProductoModel.obtenerPorCodigo(codigo);
+
+    if (!producto) {
+      res.status(404).json({ error: 'Producto no encontrado' });
+      return;
+    }
+
+    res.json(producto);
+  } catch (error) {
+    res.status(500).json({ error: 'Error al obtener el producto' });
   }
-  res.json({ ok: true });
-}
+};
+
+export const postProducto = async (req: Request, res: Response): Promise<void> => {
+  try {
+    const creado = await ProductoModel.crear(req.body);
+
+    if (!creado) {
+      // El modelo ya valida y revisa duplicados
+      res.status(400).json({ error: 'Producto inválido o ya existe con ese código' });
+      return;
+    }
+
+    res.status(201).json(creado);
+  } catch (error) {
+    res.status(500).json({ error: 'Error al crear el producto' });
+  }
+};
+
+export const putProducto = async (req: Request, res: Response): Promise<void> => {
+  try {
+    const codigo = String(req.params.codigo);
+    const actualizado = await ProductoModel.actualizar(codigo, req.body);
+
+    if (!actualizado) {
+      res.status(404).json({ error: 'Producto no encontrado o datos inválidos' });
+      return;
+    }
+
+    res.json(actualizado);
+  } catch (error) {
+    res.status(500).json({ error: 'Error al actualizar el producto' });
+  }
+};
+
+export const deleteProducto = async (req: Request, res: Response): Promise<void> => {
+  try {
+    const codigo = String(req.params.codigo);
+    const eliminado = await ProductoModel.eliminar(codigo);
+
+    if (!eliminado) {
+      res.status(404).json({ error: 'No existe ese código' });
+      return;
+    }
+
+    res.json({ ok: true });
+  } catch (error) {
+    res.status(500).json({ error: 'Error al eliminar el producto' });
+  }
+};
