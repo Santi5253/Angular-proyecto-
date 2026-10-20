@@ -1,10 +1,9 @@
 # Back-end Caja Cigarrería
 
-Carpeta ubicada en la misma raíz del front-end (`mi-app/backend`), POR FUERA de `mi-app/src`.
 
-## Comandos (CMD, según apuntes)
+## Comandos 
 ```bash
-cd "C:\Users\sf467\Documents\Angular proyecto\mi-app\backend"
+cd "C:\Documents\Angular proyecto\mi-app\backend"
 npm init -y
 npm install express pg cors dotenv
 npm i -D typescript ts-node-dev @types/express @types/cors @types/pg @types/node
