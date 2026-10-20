@@ -1,6 +1,6 @@
-# Angular Proyecto — Sistema de Caja Registradora (Cigarrería)
+# Sistema de Caja Registradora (Cigarrería)
 
-Repo universitario: front-end Angular + back-end Express, como carpetas hermanas.
+front-end Angular + back-end Express.
 
 ```
 mi-app/
@@ -24,5 +24,4 @@ npm run dev
 # http://localhost:3000/salud
 ```
 
-## Lo que NO se sube
-`node_modules/`, `dist/`, `.angular/`, `backend/.env` (ver `.gitignore` de cada carpeta).
+
