@@ -42,7 +42,7 @@ export class ProductoModel {
     return true;
   }
 
-  // Opcional, pero se parece mucho a lo que pide el profe
+
   static async actualizar(codigo: string, cambios: Partial<Producto>): Promise<Producto | null> {
     const index = productosDB.findIndex(
       (p) => p.codigo.toLowerCase() === codigo.toLowerCase()
