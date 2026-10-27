@@ -8,7 +8,7 @@ require('dotenv').config({ path: path.join(__dirname, '..', '.env') });
 const DB_HOST = process.env.DB_HOST || 'localhost';
 const DB_PORT = Number(process.env.DB_PORT || 5432);
 const DB_USER = process.env.DB_USER || 'postgres';
-const DB_PASSWORD = process.env.DB_PASSWORD || 'postgres';
+const DB_PASSWORD = process.env.DB_PASSWORD || '1234';
 const DB_NAME = process.env.DB_NAME || 'caja_cigarreria';
 
 async function main() {
