@@ -8,28 +8,28 @@ import { Producto } from '../models/producto';
   providedIn: 'root',
 })
 export class ProductosApiService {
-  // Usa las rutas VERBALES que YA existen para NO romper nada
-  private readonly url = 'http://localhost:3000';
+  // Prefijo versionado /api/v1 (unica fuente de verdad: PostgreSQL)
+  private readonly url = 'http://localhost:3000/api/v1';
 
   constructor(private http: HttpClient) {}
 
   getProductos(): Observable<Producto[]> {
-    return this.http.get<Producto[]>(`${this.url}/getproductos`);
+    return this.http.get<Producto[]>(`${this.url}/productos`);
   }
 
   getProductoPorCodigo(codigo: string): Observable<Producto> {
-    return this.http.get<Producto>(`${this.url}/getproductos/${codigo}`);
+    return this.http.get<Producto>(`${this.url}/productos/${codigo}`);
   }
 
   crearProducto(producto: Producto): Observable<Producto> {
-    return this.http.post<Producto>(`${this.url}/postproductos`, producto);
+    return this.http.post<Producto>(`${this.url}/productos`, producto);
   }
 
   actualizarProducto(codigo: string, producto: Producto): Observable<Producto> {
-    return this.http.put<Producto>(`${this.url}/putproductos/${codigo}`, producto);
+    return this.http.put<Producto>(`${this.url}/productos/${codigo}`, producto);
   }
 
   eliminarProducto(codigo: string): Observable<any> {
-    return this.http.delete<any>(`${this.url}/deleteproductos/${codigo}`);
+    return this.http.delete<any>(`${this.url}/productos/${codigo}`);
   }
 }

@@ -1,6 +1,6 @@
 import express from 'express';
 import cors from 'cors';
-import productosRoutes from './routes/productos.routes';
+import v1Router from './api/v1';
 
 // AppConfig: verifica permisos (CORS), json y rutas antes de iniciar
 const app = express();
@@ -12,6 +12,7 @@ app.get('/salud', (_req, res) => {
   res.json({ ok: true, servicio: 'backend-caja-cigarreria' });
 });
 
-app.use('/', productosRoutes);
+// Todas las rutas de negocio quedan prefijadas por /api/v1 (estilo app/api/v1/endpoints)
+app.use('/api/v1', v1Router);
 
 export default app;

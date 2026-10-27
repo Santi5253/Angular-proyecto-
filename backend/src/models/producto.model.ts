@@ -1,65 +1,79 @@
-// backend/src/models/producto.model.ts
-import { productosDB } from '../config/producto.db';
+import { pool } from '../config/db';
 import { Producto, esProductoValido } from './producto';
 
 export class ProductoModel {
   static async obtenerTodos(): Promise<Producto[]> {
-    // Devolvemos una copia para evitar mutaciones directas fuera de la clase
-    return [...productosDB];
+    const { rows } = await pool.query(
+      'SELECT codigo, nombre, categoria, precio, stock FROM productos ORDER BY codigo'
+    );
+    return rows.map((r) => ({
+      codigo: r.codigo,
+      nombre: r.nombre,
+      categoria: r.categoria,
+      precio: Number(r.precio),
+      stock: Number(r.stock),
+    }));
   }
 
   static async obtenerPorCodigo(codigo: string): Promise<Producto | null> {
-    const prod = productosDB.find(
-      (p) => p.codigo.toLowerCase() === codigo.toLowerCase()
+    const { rows } = await pool.query(
+      'SELECT codigo, nombre, categoria, precio, stock FROM productos WHERE LOWER(codigo) = LOWER($1)',
+      [codigo]
     );
-    return prod ? { ...prod } : null;
+    if (!rows[0]) return null;
+    const r = rows[0];
+    return {
+      codigo: r.codigo,
+      nombre: r.nombre,
+      categoria: r.categoria,
+      precio: Number(r.precio),
+      stock: Number(r.stock),
+    };
   }
 
   static async crear(producto: Producto): Promise<Producto | null> {
-    // Validamos con la misma función que ya usas
     if (!esProductoValido(producto)) {
       return null;
     }
 
-    const existe = productosDB.some(
-      (p) => p.codigo.toLowerCase() === producto.codigo.toLowerCase()
-    );
+    const existe = await this.obtenerPorCodigo(producto.codigo);
     if (existe) {
-      return null; // El controlador decidirá el status 409
+      return null;
     }
 
-    const nuevo: Producto = { ...producto };
-    productosDB.push(nuevo);
-    return { ...nuevo };
+    await pool.query(
+      'INSERT INTO productos (codigo, nombre, categoria, precio, stock) VALUES ($1, $2, $3, $4, $5)',
+      [producto.codigo, producto.nombre, producto.categoria, producto.precio, producto.stock]
+    );
+    return { ...producto };
   }
 
   static async eliminar(codigo: string): Promise<boolean> {
-    const index = productosDB.findIndex(
-      (p) => p.codigo.toLowerCase() === codigo.toLowerCase()
+    const res = await pool.query(
+      'DELETE FROM productos WHERE LOWER(codigo) = LOWER($1)',
+      [codigo]
     );
-    if (index === -1) return false;
-    productosDB.splice(index, 1);
-    return true;
+    return (res.rowCount ?? 0) > 0;
   }
 
-
   static async actualizar(codigo: string, cambios: Partial<Producto>): Promise<Producto | null> {
-    const index = productosDB.findIndex(
-      (p) => p.codigo.toLowerCase() === codigo.toLowerCase()
-    );
-    if (index === -1) return null;
+    const actual = await this.obtenerPorCodigo(codigo);
+    if (!actual) return null;
 
     const actualizado: Producto = {
-      ...productosDB[index],
+      ...actual,
       ...cambios,
-      codigo: productosDB[index].codigo // No dejamos cambiar el código
+      codigo: actual.codigo,
     };
 
     if (!esProductoValido(actualizado)) {
       return null;
     }
 
-    productosDB[index] = actualizado;
-    return { ...actualizado };
+    await pool.query(
+      'UPDATE productos SET nombre = $1, categoria = $2, precio = $3, stock = $4 WHERE LOWER(codigo) = LOWER($5)',
+      [actualizado.nombre, actualizado.categoria, actualizado.precio, actualizado.stock, codigo]
+    );
+    return actualizado;
   }
 }

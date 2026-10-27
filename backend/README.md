@@ -1,31 +1,47 @@
 # Back-end Caja Cigarrería
 
+Express + TypeScript + PostgreSQL 18. Rutas versionadas bajo `/api/v1`.
 
-## Comandos 
+## Comandos
+
 ```bash
-cd "C:\Documents\Angular proyecto\mi-app\backend"
-npm init -y
-npm install express pg cors dotenv
-npm i -D typescript ts-node-dev @types/express @types/cors @types/pg @types/node
-npx tsc --init
-npm run dev   # http://localhost:3000/salud
+cd "mi-app/backend"
+npm install
+cp .env.example .env   # ajusta credenciales si es necesario
+npm run db:init        # crea la BD y carga esquema + datos
+npm run dev            # http://localhost:3000/salud
 ```
+
+## Base de datos (PostgreSQL 18)
+
+1. Instala PostgreSQL 18 (https://www.postgresql.org/download/windows/), puerto 5432, usuario `postgres`.
+2. Ajusta `backend/.env` con tus credenciales.
+3. Ejecuta `npm run db:init` (crea `caja_cigarreria` y carga `sql/01_schema.sql` + `sql/02_seed.sql`).
+
+Si prefieres pgAdmin: crea la BD `caja_cigarreria` y ejecuta los SQL en orden.
 
 ## Estructura
+
 ```
 backend/
-  package.json   # inventario de insumos del back
-  tsconfig.json  # reglas TypeScript (qué es válido y qué no)
-  .env           # secretos locales (NO se sube)
-  .env.example   # plantilla sí se sube
-  .gitignore     # node_modules, dist, .env no se suben
+  package.json
+  tsconfig.json
+  .env
+  .env.example
+  scripts/init-db.js
+  sql/
+    01_schema.sql
+    02_seed.sql
   src/
-    server.ts      # serve: inicia localhost:3000
-    app.ts         # appconfig: CORS + json + rutas
-    config/db.ts   # credenciales pg
-    models/producto.ts  # plantilla que valida datos
-    controllers/productos.controller.ts  # get/post/delete
-    routes/productos.routes.ts  # /getproductos, /postproductos, /deleteproductos/:codigo
+    server.ts
+    app.ts
+    config/db.ts
+    models/producto.ts
+    models/producto.model.ts
+    api/v1/
+      index.ts
+      endpoints/productos.ts
+      routes/productos.routes.ts
 ```
 
-`dist/` es solo despliegue compilado: NO se crea ni se sube (apunte).
+Rutas: `GET /api/v1/productos` | `GET /api/v1/productos/:codigo` | `POST /api/v1/productos` | `PUT /api/v1/productos/:codigo` | `DELETE /api/v1/productos/:codigo` | `GET /salud`.

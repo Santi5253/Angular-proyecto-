@@ -1,6 +1,5 @@
-// backend/src/controllers/productos.controller.ts (refactor propuesto)
 import { Request, Response } from 'express';
-import { ProductoModel } from '../models/producto.model';
+import { ProductoModel } from '../../../models/producto.model';
 
 export const getProductos = async (_req: Request, res: Response): Promise<void> => {
   try {
@@ -32,7 +31,6 @@ export const postProducto = async (req: Request, res: Response): Promise<void> =
     const creado = await ProductoModel.crear(req.body);
 
     if (!creado) {
-      // El modelo ya valida y revisa duplicados
       res.status(400).json({ error: 'Producto inválido o ya existe con ese código' });
       return;
     }

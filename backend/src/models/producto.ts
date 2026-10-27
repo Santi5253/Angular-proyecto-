@@ -17,6 +17,8 @@ export function esProductoValido(p: unknown): p is Producto {
     (x.codigo as string).trim().length >= 3 &&
     typeof x.nombre === 'string' &&
     (x.nombre as string).trim().length >= 3 &&
+    typeof x.categoria === 'string' &&
+    (x.categoria as string).trim().length >= 3 &&
     typeof x.precio === 'number' &&
     (x.precio as number) >= 0 &&
     typeof x.stock === 'number' &&

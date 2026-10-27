@@ -10,6 +10,6 @@ const PORT = Number(process.env.PORT || 3000);
 verificarConexion().finally(() => {
   app.listen(PORT, () => {
     console.log(`Back-end caja escuchando en http://localhost:${PORT}`);
-    console.log('Rutas: GET /getproductos | POST /postproductos | DELETE /deleteproductos/:codigo | GET /salud');
+    console.log('Rutas: GET /api/v1/productos | GET /api/v1/productos/:codigo | POST /api/v1/productos | PUT /api/v1/productos/:codigo | DELETE /api/v1/productos/:codigo | GET /salud');
   });
 });

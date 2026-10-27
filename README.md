@@ -1,27 +1,26 @@
 # Sistema de Caja Registradora (Cigarrería)
 
-front-end Angular + back-end Express.
+Front-end Angular + back-end Express + PostgreSQL 18.
 
 ```
 mi-app/
-  front/     ← Angular 21 + Material (ng serve, schematics, router-outlet)
-  backend/   ← Express + TypeScript + pg (GET /getproductos, POST, DELETE)
+  front/     <- Angular + Material
+  backend/   <- Express + TypeScript + PostgreSQL 18 (/api/v1/productos)
 ```
 
-## Front (ver `front/README.md`)
+## Ejecutar
 ```bash
-cd front
-npm install
-npm.cmd start
-# http://localhost:4200/productos | /formulario | /tabla
-```
-
-## Back (ver `backend/README.md`)
-```bash
+# Backend
 cd backend
 npm install
+cp .env.example .env
+npm run db:init
 npm run dev
-# http://localhost:3000/salud
+
+# Frontend
+cd ../front
+npm install
+npm start
 ```
 
 

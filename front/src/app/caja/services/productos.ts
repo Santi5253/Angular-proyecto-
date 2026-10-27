@@ -1,24 +1,23 @@
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
 import { BehaviorSubject } from 'rxjs';
 import { Producto } from '../models/producto';
 
-const STORAGE_KEY = 'caja_productos_cigarreria';
-
-const SEMILLA: Producto[] = [
-  { codigo: 'CIG-001', nombre: 'Pielroja x20', categoria: 'Cigarrillos', precio: 9500, stock: 30 },
-  { codigo: 'CIG-002', nombre: 'Marlboro Rojo x20', categoria: 'Cigarrillos', precio: 14500, stock: 20 },
-  { codigo: 'BEB-001', nombre: 'Pony Malta 330ml', categoria: 'Bebidas', precio: 3500, stock: 48 },
-  { codigo: 'BEB-002', nombre: 'Coca-Cola 400ml', categoria: 'Bebidas', precio: 4000, stock: 36 },
-  { codigo: 'DUL-001', nombre: 'Chocorramo', categoria: 'Dulces', precio: 3500, stock: 25 },
-  { codigo: 'ABA-001', nombre: 'Papas Margarita 105g', categoria: 'Abarrotes', precio: 6500, stock: 18 },
-];
-
+// Servicio unico de inventario: la fuente de verdad es el backend (PostgreSQL).
+// Se mantiene una cache en memoria para que la UI siga siendo sincrona.
 @Injectable({
   providedIn: 'root',
 })
 export class Productos {
-  private readonly _productos = new BehaviorSubject<Producto[]>(this.cargar());
+  private http = inject(HttpClient);
+  private readonly base = 'http://localhost:3000/api/v1';
+
+  private readonly _productos = new BehaviorSubject<Producto[]>([]);
   readonly productos$ = this._productos.asObservable();
+
+  constructor() {
+    this.refrescarServidor();
+  }
 
   listar(): Producto[] {
     return [...this._productos.value];
@@ -29,27 +28,43 @@ export class Productos {
     if (actual.some((x) => x.codigo.toLowerCase() === p.codigo.toLowerCase())) {
       throw new Error(`Ya existe un producto con código ${p.codigo}`);
     }
-    this.guardar([...actual, p]);
+    // Actualizacion optimista de la cache
+    this._productos.next([...actual, p]);
+    this.http.post<Producto>(`${this.base}/productos`, p).subscribe({
+      error: () => this.refrescarServidor(),
+    });
   }
 
   actualizar(codigo: string, cambios: Producto): void {
-    const actual = this.listar().map((x) =>
-      x.codigo.toLowerCase() === codigo.toLowerCase() ? { ...cambios } : x,
+    const actual = this._productos.value.map((x) =>
+      x.codigo.toLowerCase() === codigo.toLowerCase() ? { ...cambios, codigo: x.codigo } : x,
     );
-    this.guardar(actual);
+    this._productos.next(actual);
+    this.http.put<Producto>(`${this.base}/productos/${codigo}`, cambios).subscribe({
+      error: () => this.refrescarServidor(),
+    });
   }
 
   eliminar(codigo: string): void {
-    this.guardar(this.listar().filter((x) => x.codigo.toLowerCase() !== codigo.toLowerCase()));
+    this._productos.next(
+      this._productos.value.filter((x) => x.codigo.toLowerCase() !== codigo.toLowerCase()),
+    );
+    this.http.delete(`${this.base}/productos/${codigo}`).subscribe({
+      error: () => this.refrescarServidor(),
+    });
   }
 
   descontar(items: { codigo: string; cantidad: number }[]): void {
-    const actual = this.listar().map((x) => {
+    const actual = this._productos.value.map((x) => {
       const item = items.find((i) => i.codigo.toLowerCase() === x.codigo.toLowerCase());
       if (!item) return x;
-      return { ...x, stock: Math.max(0, x.stock - item.cantidad) };
+      const actualizado = { ...x, stock: Math.max(0, x.stock - item.cantidad) };
+      this.http.put<Producto>(`${this.base}/productos/${x.codigo}`, actualizado).subscribe({
+        error: () => this.refrescarServidor(),
+      });
+      return actualizado;
     });
-    this.guardar(actual);
+    this._productos.next(actual);
   }
 
   buscar(texto: string): Producto[] {
@@ -68,25 +83,13 @@ export class Productos {
   }
 
   restablecerDemo(): void {
-    this.guardar([...SEMILLA]);
+    this.refrescarServidor();
   }
 
-  private cargar(): Producto[] {
-    try {
-      const raw = localStorage.getItem(STORAGE_KEY);
-      if (raw) return JSON.parse(raw) as Producto[];
-    } catch {
-      // si falla, usar semilla
-    }
-    return [...SEMILLA];
-  }
-
-  private guardar(items: Producto[]): void {
-    this._productos.next(items);
-    try {
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(items));
-    } catch {
-      // almacenamiento no disponible, se mantiene en memoria
-    }
+  refrescarServidor(): void {
+    this.http.get<Producto[]>(`${this.base}/productos`).subscribe({
+      next: (data) => this._productos.next(data ?? []),
+      error: () => this._productos.next([]),
+    });
   }
 }
