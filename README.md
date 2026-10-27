@@ -1,5 +1,10 @@
 # Sistema de Caja Registradora (Cigarrería)
 
+*Comando para usar en la terminal para evitar el error de variables de entorno* 
+Set-ExecutionPolicy -ExecutionPolicy Bypass -Scope Process
+
+
+
 Front-end Angular + back-end Express + PostgreSQL 18.
 
 ```
