@@ -26,12 +26,12 @@
   background: linear-gradient(90deg, #1e3a8a, #3b82f6, #10b981);
 }
 .login-img-wrap {
-  width: 130px; height: 130px;
+  width: 150px; height: 150px;
   margin: 0 auto 0.8rem;
   border-radius: 50%;
-  background: linear-gradient(135deg, #1e3a8a, #10b981);
+  background: #fff;
   padding: 6px;
-  box-shadow: 0 8px 24px rgba(30,58,138,0.35);
+  box-shadow: 0 8px 24px rgba(30,58,138,0.25);
   animation: float 3s ease-in-out infinite;
 }
 .login-img {
@@ -39,7 +39,7 @@
   border-radius: 50%;
   object-fit: cover;
   background: #fff;
-  border: 4px solid #fff;
+  border: 3px solid #e2e8f0;
 }
 .login-card h1 { margin: 0.5rem 0 0; color: #1e3a8a; font-size: 1.8rem; font-weight: 700; }
 .subtitle { color: #64748b; margin: 0.3rem 0 1.5rem; }
