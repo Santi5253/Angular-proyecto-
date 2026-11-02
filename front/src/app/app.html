@@ -1,10 +1,24 @@
 <header class="topbar">
-  <h2 class="brand">Caja Registradora <span>| Cigarrería</span></h2>
+  <div class="brand">
+    <span class="logo">🚬</span>
+    <div>
+      <h2>Caja Registradora</h2>
+      <p>Cigarrería</p>
+    </div>
+  </div>
+  @if (usuario) {
   <nav class="nav-links">
-    <a routerLink="/inventario" routerLinkActive="active">Inventario</a>
-    <a routerLink="/factura" routerLinkActive="active">Factura</a>
-    <a routerLink="/tabla" routerLinkActive="active">Tabla Productos</a>
+    <a routerLink="/inventario" routerLinkActive="active"><span class="icon">📦</span> Inventario</a>
+    <a routerLink="/factura" routerLinkActive="active"><span class="icon">🧾</span> Factura</a>
+    <a routerLink="/historial" routerLinkActive="active"><span class="icon">📊</span> Historial</a>
+    <a routerLink="/dashboard" routerLinkActive="active"><span class="icon">📈</span> Dashboard</a>
+    <div class="user-chip">
+      <span class="avatar">{{ usuario.nombre.charAt(0) }}</span>
+      <span>{{ usuario.nombre }}</span>
+    </div>
+    <button type="button" (click)="logout()">Salir</button>
   </nav>
+  }
 </header>
 
 <div class="page-header">
@@ -15,5 +29,3 @@
 <main class="content">
   <router-outlet></router-outlet>
 </main>
-
-

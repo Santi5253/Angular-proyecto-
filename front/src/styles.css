@@ -1,12 +1,23 @@
 /* Estilos globales - Sistema Caja Cigarrería */
+:root {
+  --primary: #1e3a8a;
+  --primary-light: #3b82f6;
+  --accent: #10b981;
+  --bg: #f1f5f9;
+  --card: #ffffff;
+  --text: #0f172a;
+  --muted: #64748b;
+}
+
 html, body {
   height: 100%;
   margin: 0;
-  font-family: Roboto, "Helvetica Neue", sans-serif;
-  background: #f8fafc;
-  color: #111827;
+  font-family: 'Segoe UI', Roboto, "Helvetica Neue", sans-serif;
+  background: var(--bg);
+  color: var(--text);
 }
 
 * {
   box-sizing: border-box;
 }
+

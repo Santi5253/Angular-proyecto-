@@ -6,6 +6,7 @@ import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
 import { MatRadioModule } from '@angular/material/radio';
 import { MatTableModule } from '@angular/material/table';
+import { HttpClient } from '@angular/common/http';
 import QRCode from 'qrcode';
 import { Producto } from '../../models/producto';
 import { Productos } from '../../services/productos';
@@ -54,6 +55,8 @@ const SEQ_KEY = 'caja_factura_seq';
 export class FacturaCaja implements OnInit {
   private fb = inject(FormBuilder);
   private servicio = inject(Productos);
+  private http = inject(HttpClient);
+  private readonly ventasUrl = 'http://localhost:3000/api/v1/ventas';
 
   medios: MedioPago[] = ['Efectivo', 'Tarjeta', 'Nequi', 'Daviplata'];
   carrito: LineaFactura[] = [];
@@ -208,8 +211,27 @@ export class FacturaCaja implements OnInit {
       medioPago: pago.medio!,
     };
 
-    // Descuenta del inventario único (se refleja en Inventario y Tabla)
-    this.servicio.descontar(this.carrito.map((l) => ({ codigo: l.producto.codigo, cantidad: l.cantidad })));
+    // El stock se actualiza automaticamente por el trigger en PostgreSQL al registrar la venta.
+    // Se refresca la cache local para reflejar el nuevo stock.
+    const payload = {
+      cliente: this.factura.cliente,
+      documento: this.factura.documento,
+      medio_pago: this.factura.medioPago,
+      subtotal: this.factura.subtotal,
+      descuento: this.factura.descuento,
+      total: this.factura.total,
+      items: this.factura.lineas.map((l) => ({
+        codigo: l.producto.codigo,
+        cantidad: l.cantidad,
+        precio_unitario: l.producto.precio,
+        subtotal: l.producto.precio * l.cantidad,
+      })),
+    };
+    this.http.post(this.ventasUrl, payload).subscribe({
+      next: () => this.servicio.refrescarServidor(),
+      error: () => this.servicio.refrescarServidor(),
+    });
+
     this.carrito = [];
   }
 

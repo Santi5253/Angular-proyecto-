@@ -1,0 +1,49 @@
+<mat-card class="historial-card">
+  <mat-card-header>
+    <mat-card-title>Historial de ventas del día</mat-card-title>
+    <mat-card-subtitle>Consulte las ventas registradas hoy. Fuente: PostgreSQL (ventas).</mat-card-subtitle>
+  </mat-card-header>
+  <mat-card-content>
+    <div class="toolbar">
+      <mat-form-field appearance="outline" class="search">
+        <mat-label>Buscar por cliente, medio o #</mat-label>
+        <input matInput [value]="filtro" (input)="filtro = $any($event.target).value" placeholder="Ej: Maria, Nequi, 5" />
+      </mat-form-field>
+      <button mat-raised-button color="primary" (click)="cargar()">Actualizar</button>
+    </div>
+
+    <div class="kpis">
+      <div class="kpi"><span>Ventas hoy</span><strong>{{ cantidadHoy }}</strong></div>
+      <div class="kpi"><span>Total hoy</span><strong>${{ totalHoy }}</strong></div>
+    </div>
+
+    <table mat-table [dataSource]="ventasFiltradas" class="full-width-table">
+      <ng-container matColumnDef="id">
+        <th mat-header-cell *matHeaderCellDef>#</th>
+        <td mat-cell *matCellDef="let v">{{ v.id }}</td>
+      </ng-container>
+      <ng-container matColumnDef="fecha">
+        <th mat-header-cell *matHeaderCellDef>Hora</th>
+        <td mat-cell *matCellDef="let v">{{ v.fecha | date:'shortTime' }}</td>
+      </ng-container>
+      <ng-container matColumnDef="cliente">
+        <th mat-header-cell *matHeaderCellDef>Cliente</th>
+        <td mat-cell *matCellDef="let v">{{ v.cliente || '—' }}</td>
+      </ng-container>
+      <ng-container matColumnDef="medio_pago">
+        <th mat-header-cell *matHeaderCellDef>Medio</th>
+        <td mat-cell *matCellDef="let v">{{ v.medio_pago }}</td>
+      </ng-container>
+      <ng-container matColumnDef="total">
+        <th mat-header-cell *matHeaderCellDef>Total</th>
+        <td mat-cell *matCellDef="let v">${{ v.total }}</td>
+      </ng-container>
+      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+    </table>
+
+    @if (!ventasFiltradas.length) {
+      <p class="empty">Sin ventas hoy.</p>
+    }
+  </mat-card-content>
+</mat-card>

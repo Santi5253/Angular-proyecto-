@@ -1,5 +1,6 @@
-import { Component, signal } from '@angular/core';
-import { RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
+import { Component, inject, signal } from '@angular/core';
+import { RouterLink, RouterLinkActive, RouterOutlet, Router } from '@angular/router';
+import { AuthService } from './caja/services/auth.service';
 
 @Component({
   selector: 'app-root',
@@ -8,5 +9,16 @@ import { RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
   styleUrl: './app.css'
 })
 export class App {
-  protected readonly title = signal('mi-app');
+  protected readonly title = signal('Caja Registradora');
+  private auth = inject(AuthService);
+  private router = inject(Router);
+
+  get usuario() {
+    return this.auth.usuarioActual;
+  }
+
+  logout(): void {
+    this.auth.logout();
+    this.router.navigate(['/login']);
+  }
 }

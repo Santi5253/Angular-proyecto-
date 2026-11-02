@@ -1,74 +1,105 @@
-/* Sistema Caja Registradora - Cigarrería | Hoja de estilos principal */
-:host {
-  display: block;
+:root {
+  --primary: #1e3a8a;
+  --primary-light: #3b82f6;
+  --accent: #10b981;
+  --danger: #ef4444;
+  --bg: #eef2ff;
+  --card: rgba(255,255,255,0.9);
+  --text: #0f172a;
+  --muted: #64748b;
+  --radius: 14px;
+  --shadow: 0 8px 24px rgba(30,58,138,0.08);
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  font-family: 'Segoe UI', Roboto, "Helvetica Neue", sans-serif;
+  background: linear-gradient(135deg, #eef2ff 0%, #e0e7ff 50%, #f0fdf4 100%);
+  color: var(--text);
   min-height: 100vh;
-  background: #f8fafc;
-  font-family: Roboto, "Helvetica Neue", sans-serif;
 }
 
 .topbar {
+  background: linear-gradient(135deg, var(--primary), var(--primary-light));
+  color: #fff;
+  padding: 0.9rem 1.5rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  box-shadow: 0 4px 16px rgba(30,58,138,0.25);
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  backdrop-filter: blur(10px);
+}
+
+.brand { display: flex; align-items: center; gap: 0.8rem; }
+.logo { font-size: 2rem; }
+.brand h2 { margin: 0; font-size: 1.3rem; font-weight: 700; }
+.brand p { margin: 0; font-size: 0.85rem; opacity: 0.85; }
+
+.nav-links { display: flex; gap: 0.4rem; align-items: center; flex-wrap: wrap; }
+.nav-links a {
+  color: #fff;
+  text-decoration: none;
+  padding: 0.5rem 1rem;
+  border-radius: 8px;
+  transition: all 0.2s ease;
+  font-weight: 500;
   display: flex;
   align-items: center;
-  justify-content: space-between;
-  padding: 14px 24px;
-  background: #111827;
-  color: #fff;
-  box-shadow: 0 2px 8px rgba(0,0,0,.25);
+  gap: 0.4rem;
+}
+.nav-links a .icon { font-size: 1.1rem; }
+.nav-links a:hover { background: rgba(255,255,255,0.18); transform: translateY(-1px); }
+.nav-links a.active { background: rgba(255,255,255,0.28); font-weight: 700; box-shadow: inset 0 0 0 1px rgba(255,255,255,0.3); }
+
+.user-chip {
+  display: flex; align-items: center; gap: 0.5rem;
+  background: rgba(255,255,255,0.18);
+  padding: 0.3rem 0.8rem 0.3rem 0.3rem;
+  border-radius: 999px;
+  margin-left: 0.5rem;
+}
+.avatar {
+  width: 28px; height: 28px; border-radius: 50%;
+  background: #fff; color: var(--primary);
+  display: flex; align-items: center; justify-content: center;
+  font-weight: 700; font-size: 0.9rem;
+}
+.nav-links button {
+  background: rgba(255,255,255,0.2);
+  color: #fff; border: none;
+  padding: 0.5rem 1rem; border-radius: 8px;
+  cursor: pointer; font-weight: 500;
+  transition: background 0.2s;
+}
+.nav-links button:hover { background: rgba(255,255,255,0.32); }
+
+.page-header { padding: 1.5rem 1.5rem 0; animation: fadeIn 0.4s ease; }
+.page-header h1 { margin: 0; font-size: 1.8rem; color: var(--primary); font-weight: 700; }
+.page-header p { margin: 0.3rem 0 0; color: var(--muted); }
+
+.content { padding: 1.5rem; animation: fadeIn 0.5s ease; }
+
+mat-card {
+  border-radius: var(--radius) !important;
+  box-shadow: var(--shadow) !important;
+  background: var(--card) !important;
+  backdrop-filter: blur(8px);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+mat-card:hover { transform: translateY(-2px); box-shadow: 0 12px 32px rgba(30,58,138,0.12) !important; }
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
 }
 
-.brand {
-  margin: 0;
-  font-size: 1.25rem;
-  letter-spacing: .5px;
-  font-weight: 700;
-}
-
-.brand span {
-  color: #f59e0b;
-}
-
-.nav-links {
-  display: flex;
-  gap: 12px;
-}
-
-.nav-links a {
-  color: #e5e7eb;
-  text-decoration: none;
-  padding: 8px 16px;
-  border-radius: 20px;
-  border: 1px solid transparent;
-  transition: all .2s ease;
-  font-weight: 500;
-}
-
-.nav-links a:hover {
-  background: rgba(255,255,255,.12);
-}
-
-.nav-links a.active {
-  background: #f59e0b;
-  color: #111827;
-  font-weight: 700;
-}
-
-.page-header {
-  padding: 24px 24px 0 24px;
-}
-
-.page-header h1 {
-  margin: 0;
-  color: #111827;
-  font-size: 1.6rem;
-}
-
-.page-header p {
-  margin: 6px 0 0 0;
-  color: #64748b;
-}
-
-.content {
-  padding: 16px 24px 40px 24px;
-  max-width: 1100px;
-  margin: 0 auto;
+.btn-primary {
+  background: linear-gradient(135deg, var(--primary), var(--primary-light)) !important;
+  color: #fff !important;
+  border-radius: 8px !important;
 }
