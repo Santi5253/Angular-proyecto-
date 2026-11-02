@@ -1,6 +1,6 @@
 <header class="topbar">
   <div class="brand">
-    <span class="logo">🚬</span>
+    <span class="logo">POS</span>
     <div>
       <h2>Caja Registradora</h2>
       <p>Cigarrería</p>
@@ -8,10 +8,10 @@
   </div>
   @if (usuario) {
   <nav class="nav-links">
-    <a routerLink="/inventario" routerLinkActive="active"><span class="icon">📦</span> Inventario</a>
-    <a routerLink="/factura" routerLinkActive="active"><span class="icon">🧾</span> Factura</a>
-    <a routerLink="/historial" routerLinkActive="active"><span class="icon">📊</span> Historial</a>
-    <a routerLink="/dashboard" routerLinkActive="active"><span class="icon">📈</span> Dashboard</a>
+    <a routerLink="/inventario" routerLinkActive="active">Inventario</a>
+    <a routerLink="/factura" routerLinkActive="active">Factura</a>
+    <a routerLink="/historial" routerLinkActive="active">Historial</a>
+    <a routerLink="/dashboard" routerLinkActive="active">Dashboard</a>
     <div class="user-chip">
       <span class="avatar">{{ usuario.nombre.charAt(0) }}</span>
       <span>{{ usuario.nombre }}</span>
