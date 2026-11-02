@@ -22,7 +22,8 @@
 .chart-card h3 { margin: 0 0 0.8rem; color: #1e3a8a; font-size: 1.05rem; }
 .chart-card canvas { max-height: 260px; }
 
-.criticos { margin-top: 1rem; }
+.empty-state { text-align: center; padding: 1.5rem; }
+.empty-img { width: 100px; height: 100px; object-fit: contain; margin-bottom: 0.5rem; }
 .criticos h3 { color: #1e3a8a; }
 .criticos table { width: 100%; border-collapse: collapse; background: #fff; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 14px rgba(0,0,0,0.06); }
 .criticos th, .criticos td { padding: 0.7rem; border-bottom: 1px solid #e2e8f0; text-align: left; }

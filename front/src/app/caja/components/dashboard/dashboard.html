@@ -1,6 +1,6 @@
 <section class="dashboard">
   <div class="dashboard-header">
-    <img src="/img/dashboard.png" alt="Dashboard" class="card-img" />
+    <img src="/img/hanna-everest.png" alt="Dashboard" class="card-img" />
     <h2>Dashboard — Cigarrería</h2>
   </div>
   <div class="kpis">
@@ -54,6 +54,11 @@
         }
       </tbody>
     </table>
-    @if (!criticos.length) { <p>Sin productos críticos.</p> }
+    @if (!criticos.length) { 
+      <div class="empty-state">
+        <img src="/img/mike-sonriendo.png" alt="Sin críticos" class="empty-img" />
+        <p>Sin productos críticos.</p>
+      </div>
+    }
   </div>
 </section>

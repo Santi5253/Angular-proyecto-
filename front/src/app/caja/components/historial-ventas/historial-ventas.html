@@ -1,6 +1,6 @@
 <mat-card class="historial-card">
   <mat-card-header>
-    <img src="/img/historial.png" alt="Historial" class="card-img" />
+    <img src="/img/mike-sonriendo.png" alt="Historial" class="card-img" />
     <div>
       <mat-card-title>Historial de ventas del día</mat-card-title>
       <mat-card-subtitle>Consulte las ventas registradas hoy. Fuente: PostgreSQL (ventas).</mat-card-subtitle>
@@ -46,7 +46,10 @@
     </table>
 
     @if (!ventasFiltradas.length) {
-      <p class="empty">Sin ventas hoy.</p>
+      <div class="empty-state">
+        <img src="/img/hanna-guiniando.png" alt="Sin ventas" class="empty-img" />
+        <p>Sin ventas hoy.</p>
+      </div>
     }
   </mat-card-content>
 </mat-card>
