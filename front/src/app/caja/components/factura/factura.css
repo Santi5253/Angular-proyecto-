@@ -15,7 +15,7 @@
 .qr-box { text-align: center; background: #fff; padding: 1rem; border-radius: 12px; }
 .ticket { background: #f0fdf4; padding: 1rem; border-radius: 12px; margin-top: 1rem; border-left: 4px solid #10b981; box-shadow: 0 2px 8px rgba(16,185,129,0.1); }
 .ticket h3 { color: #065f46; margin-top: 0; }
-mat-card-title { color: #1e3a8a !important; font-weight: 700 !important; }
+.card-img { width: 56px; height: 56px; object-fit: contain; margin-right: 0.5rem; }
 mat-card-subtitle { color: #64748b !important; }
 button[mat-raised-button] { border-radius: 10px !important; padding: 0.5rem 1.4rem !important; font-weight: 600 !important; }
 button[mat-button] { border-radius: 8px !important; }

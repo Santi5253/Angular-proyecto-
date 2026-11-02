@@ -16,3 +16,6 @@ Thumbs.db
 
 # Manuales Word
 *.docx
+
+# Logos originales (solo se usan copias en front/public/img)
+Logos para la tienda/

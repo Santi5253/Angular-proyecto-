@@ -10,7 +10,7 @@
 .full-width-table td { padding: 0.7rem; border-bottom: 1px solid #e2e8f0; }
 .full-width-table tr:hover td { background: #f1f5f9; }
 .empty { color: #64748b; text-align: center; padding: 1.5rem; }
-mat-card-title { color: #1e3a8a !important; font-weight: 700 !important; }
+.card-img { width: 56px; height: 56px; object-fit: contain; margin-right: 0.5rem; }
 mat-card-subtitle { color: #64748b !important; }
 button[mat-raised-button] { border-radius: 10px !important; padding: 0.5rem 1.4rem !important; font-weight: 600 !important; }
 button[mat-button] { border-radius: 8px !important; }

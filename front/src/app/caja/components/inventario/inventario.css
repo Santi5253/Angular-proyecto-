@@ -18,6 +18,6 @@ button[mat-button] { border-radius: 8px !important; }
 .badge { background: #dbeafe; color: #1e3a8a; padding: 0.25rem 0.7rem; border-radius: 999px; font-size: 0.8rem; font-weight: 600; }
 .error { color: #ef4444; font-weight: 500; background: #fee2e2; padding: 0.5rem 0.8rem; border-radius: 8px; }
 .empty { color: #64748b; text-align: center; padding: 1.5rem; }
-mat-card-title { color: #1e3a8a !important; font-weight: 700 !important; }
+.card-img { width: 56px; height: 56px; object-fit: contain; margin-right: 0.5rem; }
 mat-card-subtitle { color: #64748b !important; }
 :root { --mdc-theme-primary: #1e3a8a; }

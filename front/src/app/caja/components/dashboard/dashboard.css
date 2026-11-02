@@ -1,5 +1,6 @@
 .dashboard { padding: 0; }
-.kpis { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; margin: 1rem 0; }
+.dashboard-header { display: flex; align-items: center; gap: 1rem; margin-bottom: 1rem; }
+.card-img { width: 60px; height: 60px; object-fit: contain; }
 .kpi {
   background: linear-gradient(135deg, #1e3a8a, #3b82f6);
   color: #fff; padding: 1.2rem; border-radius: 14px;
