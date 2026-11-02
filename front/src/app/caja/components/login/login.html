@@ -1,6 +1,8 @@
 <div class="login-wrapper">
   <div class="login-card">
-    <img src="/img/login.png" alt="Login" class="login-img" />
+    <div class="login-img-wrap">
+      <img src="/img/login.png" alt="Login" class="login-img" />
+    </div>
     <h1>Caja Registradora</h1>
     <p class="subtitle">Cigarrería — Sistema de ventas</p>
     <form [formGroup]="form" (ngSubmit)="submit()" class="login-form">
