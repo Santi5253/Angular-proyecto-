@@ -19,3 +19,6 @@ Thumbs.db
 
 # Logos originales (solo se usan copias en front/public/img)
 Logos para la tienda/
+
+# Recursos del manual (no subir)
+manual_img/
